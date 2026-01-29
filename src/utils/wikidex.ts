@@ -3,6 +3,7 @@ import ImageGeneration from '../classes/imageGeneration';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import xpath from 'xpath-html';
+import Utils from './utils';
 
 class Wikidex {
 
@@ -12,11 +13,12 @@ class Wikidex {
 
   static async downloadImage(pokemon: string, imageGeneration: ImageGeneration): Promise<void> {
     const html: string = await this.getHTML(pokemon);
-    const selectedXpath = this.getXpath(pokemon, imageGeneration);
+    const selectedXpath = this.getXpath(Utils.capitalize(pokemon), imageGeneration);
     //const url = Scrap.findElementByXpath(html, selectedXpath);
     const url = xpath.fromPageSource(html).findElement(selectedXpath).getAttribute("src");
     const extension = this.getExtension(imageGeneration);
-    Download.downloadFile(url, `./images/${imageGeneration}/${pokemon}.${extension}`, () => {});
+    Utils.ensureDirAsync(`./images/${imageGeneration}`);
+    Download.downloadFile(url, `./images/${imageGeneration}/${pokemon}${extension}`, () => {});
   }
 
   static async downloadFullImage(pokemon: string): Promise<void>{

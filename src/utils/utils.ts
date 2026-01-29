@@ -9,6 +9,19 @@ class Utils {
     return fullPath;
   }
 
+  static async fileExists(path: string) {
+    try {
+      await fs.promises.access(path); // F_OK por defecto: comprueba si es accesible
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  static capitalize(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
   static saveJSON(json: any, path: string): void {
     fs.writeFile(path, json, 'utf8', function (err) {
       if (err) {
